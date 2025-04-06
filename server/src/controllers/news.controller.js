@@ -42,6 +42,7 @@ const getNews = async (req, res) => {
 
     } catch (error) {
         console.error("Error fetching news headlines from api:", error);
+        
         return res.status(500).json({
             msg: "Internal server error",
         });

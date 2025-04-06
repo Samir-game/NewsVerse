@@ -5,7 +5,7 @@ const commentSchema= new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
-    text:{
+    comment:{
         type: String,
         required: true,
         trim: true,
