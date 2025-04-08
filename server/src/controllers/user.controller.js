@@ -31,7 +31,7 @@ const handleSignUp= async(req, res)=>{
 
         const token=  generateJWT(user)
         
-        return res.status(200).json({
+        return res.status(201).json({
             msg:"user registered",
             userName,
             userEmail,
