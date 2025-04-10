@@ -1,9 +1,9 @@
 const axios = require('axios');
 const News= require('../models/news.model.js')
 
-const getNews = async (req, res) => {
+const getNews = async () => {
     try {
-        const response = await axios.get(`https://gnews.io/api/v4/top-headlines`, {
+        const response = await axios.get(`https://gnews.io/api/v4/top-headlines`,{
             params: {
                 category: 'general',
                 lang: 'en',
@@ -22,7 +22,17 @@ const getNews = async (req, res) => {
         const articles= response.data.articles;
         for(let article of articles){
             let news= await News.findOne({newsUrl:article.url})
-            if(!news){
+
+            if(news){
+                news.newsTitle= article.title;
+                news.newsDescription= article.description || "";
+                news.newsContent= article.content || "";
+                news.newsImage= article.urlToImage || "";
+                news.newsPublishedAt= article.publishedAt;
+                news.newsSource= article.source.name;
+                await news.save();
+
+            }else{
                 news= await News.create({
                     newsTitle: article.title,
                     newsDescription: article.description,
@@ -34,21 +44,30 @@ const getNews = async (req, res) => {
                 })
             }
         }
-
-        return res.status(200).json({
-            msg:"news saved successfully",
-            headlines:articles
-        });
-
-    } catch (error) {
-        console.error("Error fetching news headlines from api:", error);
-        
-        return res.status(500).json({
-            msg: "Internal server error",
-        });
+    } catch(error){
+       console.log("error getting & saving news to database",error)  
     }
 };
 
+const fetchNewsFromDB= async(req,res)=>{
+    try {
+        const news=await News.find()
+        .sort({createdAt:-1})
+        .limit(2)
+
+        res.status(200).json({
+            news
+        })
+
+    } catch (error) {
+        console.log("error getting news from DB",error)
+        return res.status(500).json({
+            msg:"internal server error"
+        })
+    }
+}
+
 module.exports = { 
-    getNews 
+    getNews,
+    fetchNewsFromDB
 }

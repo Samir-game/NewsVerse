@@ -2,7 +2,7 @@ const express=require('express')
 const router= express.Router()
 
 const {handleSignUp, handleLogin}= require('../controllers/user.controller.js')
-const {getNews} = require('../controllers/news.controller.js')
+const {fetchNewsFromDB} = require('../controllers/news.controller.js')
 const {auth}= require('../middlewares/auth.middlewarre.js')
 const {addComment,deleteComment, allComments}= require('../controllers/comments.controller.js')
 
@@ -16,19 +16,19 @@ router
 .post(handleLogin)
 
 router
-.route("/getNews")
-.get(getNews)
+.route("/home")
+.get(fetchNewsFromDB)
 
 router
 .route("/:newsId/addComment")
 .post(auth,addComment)
 
 router
-.route("/:newsId/deleteComment/:commentId")
-.delete(auth, deleteComment);
+.route("/:commentId/deleteComment")
+.delete(auth,deleteComment)
 
 router
-.route("/:newsId/allComments")
+.route("/:newsId/allcomments")
 .get(allComments)
 
 module.exports=router

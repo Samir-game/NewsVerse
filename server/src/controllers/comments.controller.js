@@ -47,23 +47,20 @@ const addComment= async(req,res)=>{
 
 const deleteComment= async(req,res)=>{
     const userId=req.user._id;
-    const {newsId,commentId}=req.params;
+    const {commentId}=req.params;
 
     try {
-        const news= await News.findById(newsId);
+        const news= await News.findOne({"newsComments._id":commentId});
         if (!news) {
             return res.status(404).json({
-                msg: "News not found"
+                msg: "comment not found"
             });
         }
 
-        const allComments= news.newsComments;
-        const commentIndex= allComments
-                            .findIndex(
-                                (comment)=>
-                                    comment.user.toString()===userId.toString() &&
-                                    comment._id.toString()===commentId.toString()
-                            )
+        const commentIndex=news.newsComments.findIndex((comment)=>
+            comment._id.toString()===commentId.toString() &&
+            comment.user.toString()===userId.toString()
+        )
 
         if(commentIndex===-1){
             return res.status(404).json({
@@ -71,7 +68,7 @@ const deleteComment= async(req,res)=>{
             });
         }
         
-        allComments.splice(commentIndex, 1);
+        news.newsComments.splice(commentIndex, 1);
         await news.save();
 
         return res.status(200).json({
