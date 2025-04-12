@@ -23,7 +23,7 @@ connectionDB()
         console.log("Server started at PORT: ",process.env.PORT)
     })
 
-    cron.schedule("*/59 * * * *",getNewsTask)
+    cron.schedule("0 */2 * * *",getNewsTask)
     console.log("Cron job scheduled: News will be fetched every 1 minutes.");
 
 })

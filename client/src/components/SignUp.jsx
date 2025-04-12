@@ -19,8 +19,9 @@ const SignUp = () => {
       console.log("submitting to server");
       const response =await axios.post("http://localhost:8000/api/user/signup",data);
 
-      if (response.status===200) {
-        toast.success("User registered successfully", {autoClose: 1200});
+      if (response.status===201) {
+        localStorage.setItem("token",response.data.token)
+        toast.success("User registered successfully", {autoClose: 1200}); 
         // setTimeout(()=>navigate("/home"),1300)
 
       } else {

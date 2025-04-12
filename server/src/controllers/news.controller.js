@@ -53,7 +53,8 @@ const fetchNewsFromDB= async(req,res)=>{
     try {
         const news=await News.find()
         .sort({createdAt:-1})
-        .limit(2)
+        .limit(10)
+        .select("newsTitle newsSource newsPublishedAt")
 
         res.status(200).json({
             news

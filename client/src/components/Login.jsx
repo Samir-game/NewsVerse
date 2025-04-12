@@ -17,10 +17,9 @@ const Login = () => {
     console.log("submitting to server");
     try {
       const response= await axios.post("http://localhost:8000/api/user/login",data)
-      console.log(response)
+
       if(response.status===200){  
-        const token=response.data.token;
-        localStorage.setItem("token",token)
+        localStorage.setItem("token",response.data.token)
         toast.success("user login successfully",{autoClose:1200})
         // setTimeout(()=>navigate("/home"),1300)
 
